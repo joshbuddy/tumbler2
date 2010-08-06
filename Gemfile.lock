@@ -1,0 +1,22 @@
+PATH
+  remote: .
+  specs:
+    tumbler (0.1.0)
+      bundler (>= 1.0.0.rc.3)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    riot (0.11.3)
+      rr
+      term-ansicolor
+    rr (0.10.11)
+    term-ansicolor (1.0.5)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (>= 1.0.0.rc.3)
+  riot
+  tumbler!
