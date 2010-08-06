@@ -1,0 +1,22 @@
+Tumbler/Bundler
+
+Handle version number increments
+  Bump major, minor, etc..
+  Use versiononmy or just expand the current version bumping routines present in rubygems, they exist and look rather unused.
+Handle changelog generation
+  Different styles of changelog
+Create extensive skeletons for gem dev
+ -folder skeleton
+  - gem_root
+     - lib
+       - gem_project_name.rb
+       - gem_project_name
+     - test
+       - test_helper.rb
+ - test framework generation
+Handle multiple gems, nested gems
+
+  
+is there anything else?
+
+
