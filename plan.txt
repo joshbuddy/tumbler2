@@ -9,8 +9,9 @@ Create extensive skeletons for gem dev
  -folder skeleton
   - gem_root
      - lib
-       - gem_project_name.rb
+       - gem_project_name.rb (Module or Class)
        - gem_project_name
+         - version.rb
      - test
        - test_helper.rb
  - test framework generation
