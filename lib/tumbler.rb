@@ -1,3 +1,5 @@
+require 'rubygems'
+
 module Tumbler
   VERSION = '0.1.0'
   autoload :Version, 'tumbler/version'
