@@ -1,8 +1,6 @@
 require 'bundler'
 
 module Tumbler
-  VERSION = '0.1.0'
-
   class Version
     VersionParts = {:major => 0, :minor => 1, :patch => 2}
 
