@@ -12,7 +12,7 @@ context "Generator" do
     context "my_gem.rb" do
       setup { '/tmp/test/my_gem/lib/my_gem.rb' }
       asserts("my_gem.rb")    { File.exist?  topic  }
-      asserts("has module")   { File.read(topic)    }.matches %r{module MyGem #:nodoc}
+      asserts("has module")   { File.read(topic)    }.matches %r{module MyGem}
       asserts("has require")  { File.read(topic)    }.matches %r{require 'my_gem/version'\n}
     end
 
@@ -65,7 +65,7 @@ context "Generator" do
       '/tmp/test/my_gem/lib/my_gem.rb'
     end
     asserts("exists")         { File.exists? topic  }
-    asserts("has module")     { File.read topic     }.matches %r{module MyGem #:nodoc}
+    asserts("has module")     { File.read topic     }.matches %r{module MyGem}
     asserts("has version.rb") { File.exists? '/tmp/test/my_gem/lib/my_gem/version.rb'  }.not!
     asserts("has require")    { File.read(topic) =~ %r{require 'my_gem/version'\n}     }.not!
   end
@@ -92,6 +92,11 @@ context "Generator" do
     asserts("My::Gem") { File.read topic }.matches %r{MyGem}
   end
 
+end
+
+context "Components" do
+  setup { FileUtils.rm_rf '/tmp/test' }
+  
   context "generate test framework" do
     setup { @helper = '/tmp/test/my_gem/test/test_helper.rb'    }
     setup { @gem_test =  '/tmp/test/my_gem/test/my_gem_test.rb' }
@@ -195,5 +200,5 @@ context "Generator" do
     end
 
   end
-
+  
 end

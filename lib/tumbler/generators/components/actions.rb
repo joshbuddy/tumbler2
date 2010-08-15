@@ -1,0 +1,73 @@
+module Tumbler
+  module Generators
+    module Components
+      module Actions
+        def self.included(base)
+          base.extend ClassMethods
+        end
+
+        # Performs the necessary generator for a given component choice
+        # execute_component_setup(:mock, 'rr')
+        def execute_component_setup(component, choice)
+          return true && say("Skipping generator for #{component} component...", :yellow) if choice.to_s == 'none'
+          say "Applying '#{choice}' (#{component})...", :yellow
+          apply_component_for(choice, component)
+          send("setup_#{component}") if respond_to?("setup_#{component}")
+        end
+
+        # Returns the related module for a given component and option
+        # generator_module_for('rr', :mock)
+        def apply_component_for(choice, component)
+          # I need to override Thor#apply because for unknow reason :verobse => false break tasks.
+          path = File.expand_path(File.dirname(__FILE__) + "/components/#{component}/#{choice}.rb")
+          say_status :apply, "#{component}/#{choice}"
+          shell.padding += 1
+          instance_eval(open(path).read)
+          shell.padding -= 1
+        end
+
+        # Prompts the user if necessary until a valid choice is returned for the component
+        # resolve_valid_choice(:mock) => 'rr'
+        def resolve_valid_choice(component)
+          available_string = self.class.available_choices_for(component).join(", ")
+          choice = options[component]
+          until valid_choice?(component, choice)
+            say("Option for --#{component} '#{choice}' is not available.", :red)
+            choice = ask("Please enter a valid option for #{component} (#{available_string}):")
+          end
+          choice
+        end
+
+        # Returns true if the option passed is a valid choice for component
+        # valid_option?(:mock, 'rr')
+        def valid_choice?(component, choice)
+          choice && self.class.available_choices_for(component).include?(choice.to_sym)
+        end
+
+        # Run the bundler
+        def run_bundler
+          say "Bundling application dependencies using bundler...", :yellow
+          in_root { run 'bundle install' }
+        end
+
+        module ClassMethods
+          # Defines a class option to allow a component to be chosen and add to component type list
+          # Also builds the available_choices hash of which component choices are supported
+          # component_option :test, "Testing framework", :aliases => '-t', :choices => [:bacon, :shoulda]
+          def component_option(name, caption, options = {})
+            (@component_types   ||= []) << name # TODO use ordered hash and combine with choices below
+            (@available_choices ||= {})[name] = options[:choices]
+            description = "The #{caption} component (#{options[:choices].join(', ')}, none)"
+            class_option name, :default => options[:default] || options[:choices].first, :aliases => options[:aliases], :desc => description
+          end
+
+          # Returns the compiled list of component types which can be specified
+          def component_types; @component_types; end
+          # Returns the list of available choices for the given component (including none)
+          def available_choices_for(component); @available_choices[component] + [:none]; end
+
+        end
+      end
+    end
+  end
+end

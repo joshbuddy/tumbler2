@@ -1,10 +1,12 @@
 require 'thor/group'
 require File.expand_path('../generators/actions',__FILE__)
+require File.expand_path('../generators/components/actions',__FILE__)
 
 module Tumbler
   class Cli < Thor::Group
     include Thor::Actions
-    include Tumbler::Generator::Actions
+    include Tumbler::Generators::Components::Actions
+    include Tumbler::Generators::Actions
 
     def self.banner; "tumbler name [options]"; end
     def self.source_root; File.dirname(__FILE__); end
