@@ -8,7 +8,7 @@ context "Generator" do
     asserts("dir exists") { File.exist? '/tmp/test/my_gem'           }
     asserts("CHANGELOG")  { File.exist? '/tmp/test/my_gem/CHANGELOG' }
     asserts_topic.matches %r{Performing initial commit}
-    
+
     context "my_gem.rb" do
       setup { '/tmp/test/my_gem/lib/my_gem.rb' }
       asserts("my_gem.rb")    { File.exist?  topic  }
@@ -90,6 +90,110 @@ context "Generator" do
     setup { capture(:stdout) { Tumbler::Cli.start(['my_gem','-v=1.0.0',"-r=/tmp/test"]) } }
     setup { '/tmp/test/my_gem/lib/my_gem/version.rb' }
     asserts("My::Gem") { File.read topic }.matches %r{MyGem}
+  end
+
+  context "generate test framework" do
+    setup { @helper = '/tmp/test/my_gem/test/test_helper.rb'    }
+    setup { @gem_test =  '/tmp/test/my_gem/test/my_gem_test.rb' }
+
+    context "riot" do
+      setup { capture(:stdout) { Tumbler::Cli.start(['my_gem','--test=riot',"-r=/tmp/test"]) } }
+      asserts("helper.rb") { File.exist? @helper }
+      asserts("my_gem_test.rb") { File.exist? @gem_test }
+
+      context "helper" do
+        setup { File.read(@helper) }
+        asserts_topic.matches %r{require 'riot'}
+        asserts_topic.matches %r{class Riot::Situation}
+        asserts_topic.matches %r{class Riot::Context}
+        asserts_topic.matches %r{lib/my_gem.rb}
+      end
+
+      context "my_gem_test.rb" do
+        setup { File.read(@gem_test) }
+        asserts_topic.matches %r{context "MyGem"}
+        asserts_topic.matches %r{false}
+      end
+    end
+
+    context "shoulda" do
+      setup { capture(:stdout) { Tumbler::Cli.start(['my_gem','--test=shoulda',"-r=/tmp/test"]) }}
+      asserts("helper.rb") { File.exist? @helper }
+      asserts("my_gem_test.rb") { File.exist? @gem_test }
+
+      context "helper" do
+        setup { File.read(@helper) }
+        asserts_topic.matches %r{require 'test/unit'}
+        asserts_topic.matches %r{require 'shoulda'}
+        asserts_topic.matches %r{class Test::Unit::TestCase}
+        asserts_topic.matches %r{lib/my_gem.rb}
+      end
+
+      context "my_gem_test.rb" do
+        setup { File.read(@gem_test) }
+        asserts_topic.matches %r{class TestMyGem}
+        asserts_topic.matches %r{flunk}
+      end
+    end
+
+    context "rspec" do
+      setup { capture(:stdout) { Tumbler::Cli.start(['my_gem','--test=rspec',"-r=/tmp/test"]) } }
+      asserts("helper.rb") { File.exist? @helper }
+      asserts("my_gem_test.rb") { File.exist? @gem_test }
+
+      context "helper" do
+        setup { File.read(@helper) }
+        asserts_topic.matches %r{require 'spec'}
+        asserts_topic.matches %r{require 'spec/autorun'}
+        asserts_topic.matches %r{lib/my_gem.rb}
+        asserts_topic.matches %r{Spec::Runner.configure}
+      end
+
+      context "my_gem_test.rb" do
+        setup { File.read(@gem_test) }
+        asserts_topic.matches %r{describe "MyGem"}
+        asserts_topic.matches %r{fails}
+      end
+    end
+
+    context "testspec" do
+      setup { capture(:stdout) { Tumbler::Cli.start(['my_gem','--test=testspec',"-r=/tmp/test"]) } }
+      asserts("helper.rb") { File.exist? @helper }
+      asserts("my_gem_test.rb") { File.exist? @gem_test }
+
+      context "helper" do
+        setup { File.read(@helper) }
+        asserts_topic.matches %r{require 'test/spec'}
+        asserts_topic.matches %r{lib/my_gem.rb}
+        asserts_topic.matches %r{class Test::Unit::TestCase}
+      end
+
+      context "my_gem_test.rb" do
+        setup { File.read(@gem_test) }
+        asserts_topic.matches %r{describe "MyGem"}
+        asserts_topic.matches %r{fails}
+      end
+    end
+
+    context "bacon" do
+      setup { capture(:stdout) { Tumbler::Cli.start(['my_gem','--test=bacon',"-r=/tmp/test"]) } }
+      asserts("helper.rb") { File.exist? @helper }
+      asserts("my_gem_test.rb") { File.exist? @gem_test }
+
+      context "helper" do
+        setup { File.read(@helper) }
+        asserts_topic.matches %r{require 'bacon'}
+        asserts_topic.matches %r{lib/my_gem.rb}
+        asserts_topic.matches %r{class Bacon::Context}
+      end
+
+      context "my_gem_test.rb" do
+        setup { File.read(@gem_test) }
+        asserts_topic.matches %r{describe "MyGem"}
+        asserts_topic.matches %r{fails}
+      end
+    end
+
   end
 
 end
