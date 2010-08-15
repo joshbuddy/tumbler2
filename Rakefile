@@ -1,4 +1,5 @@
 require 'bundler/gem_helper'
+require File.expand_path('../lib/tumbler',__FILE__)
 Bundler::GemHelper.install_tasks
 
 require 'rake/testtask'
