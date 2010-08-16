@@ -7,7 +7,7 @@ module Tumbler
       changelog_file = opts && opts[:changelog_file]
       changelog_format = opts && opts[:changelog_format]
       @gem_helper = Bundler::GemHelper.new(root, name)
-      #@changelog = Changelog.new(@gem_helper, changelog_file, changelog_format) if use_changelog
+      @changelog = Changelog.new(@gem_helper, changelog_file, changelog_format) if use_changelog
       @version = Version.new(@gem_helper)
     end
   end
