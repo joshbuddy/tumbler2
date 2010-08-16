@@ -18,6 +18,6 @@ end
 FAIL
 
 def setup_test
-  create_file generate_path('test/test_helper.rb'), HELPER
-  create_file generate_path("test/#{name}_test.rb"), FLUNK
+  create_file generate_path('spec/spec_helper.rb'), HELPER
+  create_file generate_path("spec/#{name}_spec.rb"), FLUNK
 end

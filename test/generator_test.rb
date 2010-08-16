@@ -96,10 +96,10 @@ end
 
 context "Components" do
   setup { FileUtils.rm_rf '/tmp/test' }
-  
+  setup { @helper = '/tmp/test/my_gem/test/test_helper.rb'    }
+  setup { @gem_test =  '/tmp/test/my_gem/test/my_gem_test.rb' }
+
   context "generate test framework" do
-    setup { @helper = '/tmp/test/my_gem/test/test_helper.rb'    }
-    setup { @gem_test =  '/tmp/test/my_gem/test/my_gem_test.rb' }
 
     context "riot" do
       setup { capture(:stdout) { Tumbler::Cli.start(['my_gem','--test=riot',"-r=/tmp/test"]) } }
@@ -142,6 +142,8 @@ context "Components" do
     end
 
     context "rspec" do
+      setup { @helper = '/tmp/test/my_gem/spec/spec_helper.rb'    }
+      setup { @gem_test =  '/tmp/test/my_gem/spec/my_gem_spec.rb' }
       setup { capture(:stdout) { Tumbler::Cli.start(['my_gem','--test=rspec',"-r=/tmp/test"]) } }
       asserts("helper.rb") { File.exist? @helper }
       asserts("my_gem_test.rb") { File.exist? @gem_test }
@@ -200,5 +202,5 @@ context "Components" do
     end
 
   end
-  
+
 end
