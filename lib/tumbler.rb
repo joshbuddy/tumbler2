@@ -1,7 +1,12 @@
-require 'rubygems'
+require 'git'
+
+require 'tumbler/version'
+require 'tumbler/manager'
+require 'tumbler/changelog'
+require 'tumbler/cli'
 
 module Tumbler
-  VERSION = '0.1.0'
-  autoload :Version, 'tumbler/version'
-  autoload :Cli,     'tumbler/cli'
+  def self.install_rake_tasks
+    # do something awesome with rake files
+  end
 end

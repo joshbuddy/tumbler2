@@ -15,10 +15,14 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "tumbler"
 
-  s.add_dependency "bundler", ">= 1.0.0.rc.3"
+  s.add_dependency "git"
+  s.add_dependency "thor"
+  s.add_dependency "bundler", ">= 1.0.0.rc.5"
   s.add_development_dependency "riot"
+  s.add_development_dependency "rake"
+  s.add_development_dependency "mocha"
 
   s.files        = `git ls-files`.split("\n")
-  s.executables  = `git ls-files`.split("\n").select{|f| f =~ /^bin/}
+  s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
   s.require_path = 'lib'
 end

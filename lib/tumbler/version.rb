@@ -1,21 +1,23 @@
 require 'bundler'
 
 module Tumbler
+  VERSION = "0.1.0"
+  
   class Version
     VersionParts = {:major => 0, :minor => 1, :patch => 2}
 
-    attr_reader :version_file
-    def initialize(version_file)
-      @version_file = version_file
+    attr_reader :manager
+    def initialize(manager)
+      @manager = manager
     end
 
     def current_version
-      File.read(version_file)[/V(ERSION|ersion)\s*=\s*(["'])(.*?)\2/, 3]
+      manager.send(:current_version)
     end
 
     def update_version(version)
-      version_data = File.read(version_file)
-      version_data.sub!(/V(ERSION|ersion)(\s*=\s*)(["'])(.*?)\3/, 'V\1\2\3' + version + '\3')
+      version_data = File.read(manager.send(:version_file_path))
+      version_data.sub!(/V(?i:ersion)(\s*=\s*)(["'])(.*?)\3/, 'V\1\2\3' + version + '\3')
       File.open(version_file_path, 'w') {|f| version_data }
     end
 
