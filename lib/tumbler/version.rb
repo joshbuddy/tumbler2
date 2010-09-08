@@ -12,7 +12,7 @@ module Tumbler
     end
 
     def current_version
-      manager.send(:current_version)
+      manager.send(:version).to_s
     end
 
     def update_version(version)

@@ -5,7 +5,7 @@ module Tumbler
     end
 
     def file_path
-      File.join(@manager.root, @file)
+      File.join(@manager.base, @file)
     end
 
     def contents
